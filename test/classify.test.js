@@ -113,6 +113,11 @@ const cases = [
   ['echo done > /dev/tty', 4],
   ['dd if=/dev/zero of=/dev/sda', 1],
   ['echo "Host x" >> ~/.ssh/config', 1],
+  ['mytool --format=%an', 3],
+  ['tool --reset-cache', 3],
+  ['tool --dry-run --format=table', 3],
+  ['mytool --delete-all', 1],
+  ['nvme format /dev/nvme0n1', 1],
   ['pytest tests/', 4],
 ];
 
