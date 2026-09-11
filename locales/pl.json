@@ -85,6 +85,7 @@
   },
   "ui": {
     "already": "hooki już zainstalowane",
+    "backHint": "dowolny klawisz — powrót",
     "clean": "nic nieodwracalnego",
     "commands": [
       "{n} komenda",
@@ -104,6 +105,7 @@
     "helpUninstall": "usuwa hooki",
     "installed": "zainstalowano w {n}",
     "level": "poziom",
+    "navHint": "↑↓ wybór · enter otwórz · q wyjście",
     "noReport": "brak zapisanego podsumowania",
     "openSessions": "otwarte sesje",
     "parseFail": "nie mogę sparsować {n} — przerwane, nic nie zmieniono",

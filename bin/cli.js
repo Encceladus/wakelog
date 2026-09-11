@@ -8,14 +8,15 @@ const { execFileSync } = require('child_process');
 const { classify, LEVEL_LABELS } = require('../lib/classify');
 const { render } = require('../lib/report');
 const i18n = require('../lib/i18n');
+const interactive = require('../lib/interactive');
 
 const STATE_DIR = path.join(
   process.env.XDG_STATE_HOME || path.join(os.homedir(), '.local', 'state'),
   'wakelog'
 );
 
-// SessionEnd bywa uruchamiany z przechwyconym stdout — wtedy raport nigdzie nie dociera.
-// Terminal jest dziedziczony, więc /dev/tty omija przechwycenie.
+// SessionEnd may run with stdout captured, in which case the report reaches nobody.
+// The terminal is inherited, so /dev/tty bypasses the capture.
 function writeToTerminal(text) {
   if (process.env.WAKELOG_NO_TTY) {
     process.stdout.write(text);
@@ -73,7 +74,7 @@ function cmdLog() {
   try {
     fs.appendFileSync(sessionFile(input.session_id || input.sessionId), JSON.stringify(entry) + '\n');
   } catch {
-    // hook nigdy nie przerywa sesji
+    // a hook must never break the session
   }
   process.exit(0);
 }
@@ -127,7 +128,7 @@ function pruneReports() {
   }
 }
 
-// logi sesji, które nigdy nie doczekały się SessionEnd
+// session logs from sessions that never reached SessionEnd
 function pruneOrphans() {
   const cutoff = Date.now() - 36 * 3600 * 1000;
   try {
@@ -191,7 +192,7 @@ function cmdReport() {
     pruneReports();
     pruneOrphans();
   } catch {
-    // brak podsumowania jest akceptowalny, zawieszenie sesji nie
+    // a missing report is acceptable; a hung session is not
   }
   process.exit(0);
 }
@@ -231,8 +232,7 @@ function cmdLast() {
   process.exit(0);
 }
 
-function cmdList() {
-  const all = listReports();
+function openSessions() {
   const open = [];
   try {
     for (const f of fs.readdirSync(STATE_DIR)) {
@@ -241,30 +241,68 @@ function cmdList() {
       const lines = fs.readFileSync(full, 'utf8').split('\n').filter(Boolean);
       if (!lines.length) continue;
       const last = JSON.parse(lines[lines.length - 1]);
-      const info = gitInfo(last.cwd || '.');
-      open.push({ id: f.replace(/\.jsonl$/, ''), n: lines.length, info, at: last.at });
+      open.push({ id: f.replace(/\.jsonl$/, ''), n: lines.length, info: gitInfo(last.cwd || '.') });
     }
   } catch {}
+  return open;
+}
 
-  if (open.length) {
-    console.log(i18n.ui('openSessions'));
-    for (const o of open) {
-      const label = [o.info.repo, o.info.branch].filter(Boolean).join(' · ');
-      console.log(`  ${o.id.slice(0, 8)}  ${String(o.n).padStart(3)} cmd  ${label}`);
-    }
-    console.log('');
-  }
+function renderLive(id) {
+  const entries = loadEntries(sessionFile(id));
+  if (!entries.length) return null;
+  const cwd = entries[entries.length - 1].cwd || process.cwd();
+  return render(entries, { gitDirty: gitDirty(cwd), ...gitInfo(cwd) });
+}
 
-  if (all.length === 0) {
+function cmdList() {
+  const reports = listReports();
+  const open = openSessions();
+
+  if (reports.length === 0 && open.length === 0) {
     console.log(i18n.ui('noReport'));
     process.exit(0);
   }
-  console.log(i18n.ui('pastReports'));
-  all.forEach((f, i) => {
+
+  const items = [];
+  for (const o of open) {
+    const label = [o.info.repo, o.info.branch].filter(Boolean).join(' · ') || o.id.slice(0, 8);
+    items.push({
+      group: i18n.ui('openSessions'),
+      label,
+      hint: `${o.n} cmd · ${o.id.slice(0, 8)}`,
+      read: () => renderLive(o.id),
+    });
+  }
+  for (const f of reports) {
     const { when, label } = prettyName(f);
-    console.log(`  ${String(i + 1).padStart(2)}  ${when}  ${label}`);
-  });
-  process.exit(0);
+    items.push({
+      group: i18n.ui('pastReports'),
+      label: label || f,
+      hint: when,
+      read: () => fs.readFileSync(path.join(REPORTS_DIR, f), 'utf8'),
+    });
+  }
+
+  if (!interactive.isInteractive()) {
+    let lastGroup = null;
+    for (const it of items) {
+      if (it.group !== lastGroup) {
+        console.log((lastGroup ? '\n' : '') + it.group);
+        lastGroup = it.group;
+      }
+      console.log(`  ${it.label}  ${it.hint}`);
+    }
+    process.exit(0);
+  }
+
+  interactive
+    .select(items, {
+      title: null,
+      footer: i18n.ui('navHint'),
+      backHint: i18n.ui('backHint'),
+      onSelect: (i) => items[i].read(),
+    })
+    .then(() => process.exit(0));
 }
 
 function cmdShow(argv) {
@@ -274,7 +312,7 @@ function cmdShow(argv) {
     console.error(i18n.ui('usageShow'));
     process.exit(1);
   }
-  // identyfikator otwartej sesji — renderuj na żywo, nie ruszając stanu
+  // an open session id: render it live, leaving the state untouched
   if (!/^\d+$/.test(key)) {
     let live = null;
     try {

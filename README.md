@@ -80,7 +80,7 @@ Three cross-cutting rules:
 ## Other commands
 
 ```
-wakelog list                       # past reports and sessions still open
+wakelog list                       # interactive picker: ↑↓ to move, enter to open, q to quit
 wakelog last                       # the most recent report
 wakelog show 3                     # a past report by number
 wakelog show acme-api              # a past report by repo name
@@ -89,11 +89,13 @@ wakelog explain "git clean -fdx"   # classify a single command
 wakelog uninstall
 ```
 
+`wakelog list` falls back to a plain listing when stdout is not a terminal, so piping it still works.
+
 Reports are named after the repo and branch they came from, so concurrent sessions stay apart. The last 30 are kept in `~/.local/state/wakelog/reports/`; session logs left behind by sessions that never ended are cleared after 36 hours.
 
 ## Language
 
-English by default. Polish via `WAKELOG_LANG=pl`, or automatically when your locale starts with `pl`. Adding a language means one dictionary in `lib/i18n.js`.
+English by default, always. Another language is opt-in through `WAKELOG_LANG=pl`; the system locale is deliberately ignored, so output stays predictable in scripts and shared terminals. Adding a language means dropping a JSON file into `locales/`.
 
 ## What v0 does not do
 

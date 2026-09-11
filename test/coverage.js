@@ -1,6 +1,6 @@
 'use strict';
-// Zestaw kontrolny: komendy, które MUSZĄ trafić na poziom 1, i takie, które nie mogą.
-// Metryka to fałszywe negatywy (przepuszczone groźne), nie „ile reguł pasuje".
+// Control set: commands that MUST land on level 1, and commands that must not.
+// The metric is false negatives (dangerous commands let through), not "how many rules match".
 
 const { classify } = require('../lib/classify');
 
@@ -111,13 +111,13 @@ const noisy = MUST_BE_QUIET.filter((c) => classify(c).level <= 2);
 const recall = Math.round(((MUST_BE_L1.length - missed.length) / MUST_BE_L1.length) * 100);
 const quiet = Math.round(((MUST_BE_QUIET.length - noisy.length) / MUST_BE_QUIET.length) * 100);
 
-console.log(`\nrecall na groźnych:   ${recall}%  (przepuszczone: ${missed.length}/${MUST_BE_L1.length})`);
-console.log(`cisza na zwykłych:    ${quiet}%  (fałszywe alarmy: ${noisy.length}/${MUST_BE_QUIET.length})\n`);
+console.log(`\nrecall on dangerous:  ${recall}%  (missed: ${missed.length}/${MUST_BE_L1.length})`);
+console.log(`quiet on ordinary:    ${quiet}%  (false alarms: ${noisy.length}/${MUST_BE_QUIET.length})\n`);
 if (missed.length) {
-  console.log('przepuszczone:');
+  console.log('missed:');
   for (const c of missed) console.log(`  L${classify(c).level}  ${c}`);
 }
 if (noisy.length) {
-  console.log('\nfałszywe alarmy:');
+  console.log('\nfalse alarms:');
   for (const c of noisy) console.log(`  L${classify(c).level}  ${c}`);
 }

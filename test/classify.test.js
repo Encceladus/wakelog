@@ -132,12 +132,12 @@ for (const [cmd, expected] of cases) {
   }
 }
 
-console.log(`\n${cases.length - failed}/${cases.length} przeszło`);
-assert.strictEqual(failed, 0, `${failed} przypadków nie przeszło`);
+console.log(`\n${cases.length - failed}/${cases.length} passed`);
+assert.strictEqual(failed, 0, `${failed} case(s) failed`);
 
-// trafienia heurystyczne muszą być odróżnialne od pewnych
+// heuristic hits must stay distinguishable from confident rule hits
 const { classify: cls } = require('../lib/classify');
-assert.strictEqual(cls('zfs destroy tank/x').suspect, true, 'nieznane narzędzie = podejrzane');
-assert.strictEqual(cls('git push --force origin main').suspect, false, 'znana reguła = pewne');
-assert.strictEqual(cls('npm ci').suspect, false, 'nic podejrzanego');
-console.log('heurystyka odróżnialna od reguł: ok');
+assert.strictEqual(cls('zfs destroy tank/x').suspect, true, 'unknown tool is marked suspect');
+assert.strictEqual(cls('git push --force origin main').suspect, false, 'a known rule is confident');
+assert.strictEqual(cls('npm ci').suspect, false, 'nothing suspect here');
+console.log('heuristic distinguishable from rules: ok');

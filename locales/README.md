@@ -15,4 +15,4 @@ One JSON file per language, named by its two-letter code. Adding a language mean
 - `ui` values may contain `{n}`. Where a count varies the wording, use an array with one entry per plural form, ordered to match your `pluralRule`.
 - Missing keys fall back to English individually, so a partial translation is fine and ships without breaking anything.
 
-`WAKELOG_LANG=<code>` forces a language; otherwise it follows the system locale and falls back to English.
+`WAKELOG_LANG=<code>` selects a language. Without it the output is English; the system locale is ignored on purpose.

@@ -1,6 +1,6 @@
 {
   "name": "wakelog",
-  "version": "0.2.1",
+  "version": "0.3.1",
   "description": "After an agent session, shows what it did irreversibly - and folds away everything git can undo.",
   "keywords": [
     "claude-code",
@@ -23,7 +23,7 @@
     "wakelog": "bin/cli.js"
   },
   "scripts": {
-    "test": "node test/classify.test.js && node test/i18n.test.js",
+    "test": "node test/classify.test.js && node test/i18n.test.js && node test/interactive.test.js",
     "coverage": "node test/coverage.js"
   },
   "engines": {

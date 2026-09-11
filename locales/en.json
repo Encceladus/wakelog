@@ -85,6 +85,7 @@
   },
   "ui": {
     "already": "hooks already installed",
+    "backHint": "any key to go back",
     "clean": "nothing irreversible",
     "commands": [
       "{n} command",
@@ -102,6 +103,7 @@
     "helpUninstall": "remove the hooks",
     "installed": "installed in {n}",
     "level": "level",
+    "navHint": "↑↓ move · enter open · q quit",
     "noReport": "no saved report",
     "openSessions": "open sessions",
     "parseFail": "cannot parse {n} — aborted, nothing changed",
