@@ -58,7 +58,9 @@ Then run `/hooks` in Claude Code to reload.
 
 `Stop` is deliberately avoided (it fires after every response) and so is `PreToolUse` (it can block a session). `SessionEnd` cannot break anything — the worst a buggy version does is print no report.
 
-State lives in `~/.local/state/wakelog/` and is deleted once the report is printed. It is not a file you edit.
+The report is written to `/dev/tty` rather than stdout, because some hook runners capture stdout and the report would never reach the screen. Set `WAKELOG_NO_TTY=1` to force plain stdout (useful when piping the report somewhere).
+
+Session logs live in `~/.local/state/wakelog/` and are deleted once the report is printed. Reports go to `reports/` inside it. Neither is a file you edit.
 
 ## Levels
 
@@ -78,10 +80,16 @@ Three cross-cutting rules:
 ## Other commands
 
 ```
+wakelog list                       # past reports and sessions still open
+wakelog last                       # the most recent report
+wakelog show 3                     # a past report by number
+wakelog show acme-api              # a past report by repo name
+wakelog show 1a2b3c4d              # an open session, rendered live
 wakelog explain "git clean -fdx"   # classify a single command
-wakelog last                       # show the last report
 wakelog uninstall
 ```
+
+Reports are named after the repo and branch they came from, so concurrent sessions stay apart. The last 30 are kept in `~/.local/state/wakelog/reports/`; session logs left behind by sessions that never ended are cleared after 36 hours.
 
 ## Language
 

@@ -99,11 +99,15 @@
     "helpExplain": "klasyfikuje jedną komendę",
     "helpInstall": "wpina hooki do Claude Code",
     "helpLast": "ostatnie podsumowanie",
+    "helpList": "lista raportów i otwartych sesji",
+    "helpShow": "pokazuje wybrany raport",
     "helpUninstall": "usuwa hooki",
     "installed": "zainstalowano w {n}",
     "level": "poziom",
     "noReport": "brak zapisanego podsumowania",
+    "openSessions": "otwarte sesje",
     "parseFail": "nie mogę sparsować {n} — przerwane, nic nie zmieniono",
+    "pastReports": "poprzednie raporty",
     "reads": [
       "{n} odczyt i buildy",
       "{n} odczyty i buildy",
@@ -120,6 +124,7 @@
       "niezacommitowane: {n} plików"
     ],
     "uninstalled": "odinstalowano",
-    "usageExplain": "użycie: wakelog explain \"<komenda>\""
+    "usageExplain": "użycie: wakelog explain \"<komenda>\"",
+    "usageShow": "użycie: wakelog show <numer|repo>"
   }
 }

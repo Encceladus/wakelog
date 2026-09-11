@@ -104,6 +104,15 @@ const cases = [
   ['grep -r delete src/', 4],
   ['echo "destroy everything"', 4],
   ['rg "purge" .', 4],
+  ['npm test > /dev/null 2>&1', 4],
+  ['git fetch --all --quiet 2>/dev/null', 4],
+  ['command -v jq >/dev/null', 4],
+  ['cd /Users/x/Documents/Kod && git branch -r', 4],
+  ['npm run build &> build.log', 4],
+  ['curl -s example.com >&2', 4],
+  ['echo done > /dev/tty', 4],
+  ['dd if=/dev/zero of=/dev/sda', 1],
+  ['echo "Host x" >> ~/.ssh/config', 1],
   ['pytest tests/', 4],
 ];
 

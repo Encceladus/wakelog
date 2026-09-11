@@ -1,6 +1,6 @@
 {
   "name": "wakelog",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "After an agent session, shows what it did irreversibly - and folds away everything git can undo.",
   "keywords": [
     "claude-code",

@@ -97,11 +97,15 @@
     "helpExplain": "classify a single command",
     "helpInstall": "wire hooks into Claude Code",
     "helpLast": "show the last report",
+    "helpList": "list past reports and open sessions",
+    "helpShow": "print one past report",
     "helpUninstall": "remove the hooks",
     "installed": "installed in {n}",
     "level": "level",
     "noReport": "no saved report",
+    "openSessions": "open sessions",
     "parseFail": "cannot parse {n} — aborted, nothing changed",
+    "pastReports": "past reports",
     "reads": [
       "{n} read and builds",
       "{n} reads and builds"
@@ -116,6 +120,7 @@
       "uncommitted: {n} files"
     ],
     "uninstalled": "uninstalled",
-    "usageExplain": "usage: wakelog explain \"<command>\""
+    "usageExplain": "usage: wakelog explain \"<command>\"",
+    "usageShow": "usage: wakelog show <number|repo>"
   }
 }
