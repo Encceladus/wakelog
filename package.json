@@ -1,0 +1,37 @@
+{
+  "name": "wakelog",
+  "version": "0.1.0",
+  "description": "After an agent session, shows what it did irreversibly - and folds away everything git can undo.",
+  "keywords": [
+    "claude-code",
+    "hooks",
+    "agent",
+    "audit",
+    "cli"
+  ],
+  "homepage": "https://github.com/Encceladus/wakelog#readme",
+  "bugs": {
+    "url": "https://github.com/Encceladus/wakelog/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Encceladus/wakelog.git"
+  },
+  "license": "MIT",
+  "author": "Encceladus",
+  "bin": {
+    "wakelog": "bin/cli.js"
+  },
+  "scripts": {
+    "test": "node test/classify.test.js && node test/i18n.test.js",
+    "coverage": "node test/coverage.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "files": [
+    "bin",
+    "lib",
+    "locales"
+  ]
+}
